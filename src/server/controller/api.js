@@ -3,73 +3,82 @@ const config = require('../config.js');
 const fs = require('fs');
 const repository = require('../repository/Repository.js')
 var router = express.Router();
+const uuid = require('node-uuid');
 
 /*
- Method : POST
+ Method : POST A episode
  Url : /api/episodes
- Description : Add Episodes
+ Description : ajout d'un Episodes
  */
-router.post('/', function (request, response) {
-    var episode = request.body;
-    if (episode) {
-        episode = repository.add(episode);
-        response.status(201);
-        response.send(episode);
-    } else {
-        response.sendStatus(400);
-    }
-});
+ router.post('/', function (request, response) {
+     var episode = request.body;
+     if (episode) {
+         episode.id = uuid.v4();
+         repository.add(episode).then((episode) => {
+             response.status(201);
+             response.send(episode);
+         }).catch((err) => {
+             response.sendStatus(500);
+         });
+     } else {
+         response.sendStatus(400);
+     }
+ });
 
-/*
- Method : GET
- Url : /api/episodes
- Description : Get List of all Episodes
- */
-router.get('/', function (request, response) {
-    var episodes = repository.findAll();
-    response.status(200);
-    response.send(episodes);
-});
+ /*
+  Method : PUT episode
+  Url : /api/episodes/:id
+  Description : Update d'un Episode
+  */
+ router.put('/:id', function (request, response) {
+     var episode = repository.edit(request.params.id, request.body);
+     repository.edit(request.params.id, request.body).then((episode) => {
+         response.status(200);
+         response.send(episode);
+     }).catch((err) => {
+         response.sendStatus(500);
+     });
+ });
 
-/*
- Method : GET
- Url : /api/episodes/id
- Description : Get Episode
- */
+ /*
+  Method : GET
+  Url : /api/episodes
+  Description : get la liste des episodes
+  */
+ router.get('/', function (request, response) {
+     repository.findAll().then((episodes) => {
+         response.status(200);
+         response.send(episodes);
+     }).catch((err) => {
+         response.sendStatus(500);
+     });
+ });
 
-router.get('/:idEp', function (request, response) {
-    var epi = repository.findBy(request.params.id);
-    response.status(200);
-    response.send(epi);
-});
+ /*
+  Method : GET
+  Url : /api/episodes/:id
+  Description : Get Episode
+  */
+ router.get('/:id', function (request, response) {
+     repository.findBy(request.params.id).then((episode) => {
+         response.status(200);
+         response.send(episode);
+     }).catch((err) => {
+         response.sendStatus(500);
+     });
+ });
 
-
-router.delete('/:idEp', function(req,res){
-    var idEp = req.params.idEp;
-    var path = config.data + "/" + idEp + ".json";
-    if(fs.existsSync(path)){
-        fs.unlinkSync(path);
-        return res.sendStatus(204);
-    }else {
-        return res.sendStatus(404);
-    }
-});
-
-router.put('/:idEp', function(req,res){
-    var idEp = req.params.idEp;
-    var path = config.data + "/" + idEp + ".json";
-    var episode = req.body;
-    episode.name = req.body.name;
-    episode.code = req.body.code;
-    episode.note = req.body.note;
-    episode.id = idEp;
-    if(fs.existsSync(path)){
-        fs.writeFile(path, JSON.stringify(episode), function() {
-            res.sendStatus(200);
-        });
-    }else {
-        return res.sendStatus(404);
-    }
-});
+ /*
+  Method : DELETE
+  Url : /api/episodes/:id
+  Description : suppression Episode
+  */
+ router.delete('/:id', function (request, response) {
+     repository.delete(request.params.id).then(() => {
+         response.sendStatus(204);
+     }).catch((err) => {
+         response.sendStatus(500);
+     });
+ });
 
 module.exports = router;

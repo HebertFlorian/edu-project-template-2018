@@ -2,17 +2,17 @@ const fs = require('fs');
 const frisby = require('frisby');
 const path = require('path');
 const Joi = frisby.Joi;
-//const dal = require('../../src/server/dal');
+const dal = require('../../src/server/repository/Repository');
 
 const URL = `http://localhost:${process.env.SERVER_PORT}/api/episodes`;
 const DATA_DIR = process.env.DATA;
 
 function createFakeEpisode(done) {
   Promise.all([
-    dal.insert(
+    dal.add(
       {id: "1111-2222", name: "Breaking Bad", code: "S01E01", score: 8}
     ),
-    dal.insert(
+    dal.add(
       {id: "1111-3333", name: "Lethal Weapon", code: "S01E01", score: 7}
     )
   ]).then(() => {
@@ -38,6 +38,7 @@ function deleteFakeEpisode(done) {
   });
 }
 
+////Methode Post
 describe('Add an episode', () => {
   let id;
   it('should make an http request', (done) => {
@@ -66,4 +67,67 @@ describe('Add an episode', () => {
         done();
       });
   });
+
+  afterAll((done) => {
+    deleteFakeEpisode(done)
+  })
+
 });
+
+
+
+////Methode Get All
+describe('See all episodes',() =>{
+  beforeAll((done) =>{
+      createFakeEpisode(done);
+  });
+  it('should make an http request', (done) =>{
+    frisby.get(`${URL}/`)
+        .expect('status',200)
+        .expect('jsonTypes','*',{
+          'id': Joi.string().required(),
+          'name': Joi.string().required(),
+          'code': Joi.string().required(),
+          'score': Joi.number().required()
+    })
+        .then((res) => {
+          let datas =res.body;
+
+          expect(datas.length).toEqual(2);
+          expect(datas).toEqual(jasmine.any(Array));
+        })
+        .done(done);
+  });
+  afterAll((done) => {
+    deleteFakeEpisode(done);
+  })
+});
+
+
+////Methode Get+
+describe('See one episode', () => {
+  beforeAll((done) => {
+    createFakeEpisode(done);
+  });
+  it('should make an http request', (done) => {
+    frisby.get(`${URL}/1111-2222`)
+        .expect('status', 200)
+        .expect('jsonTypes',{
+          'id': Joi.string().required(),
+          'name': Joi.string().required(),
+          'code': Joi.string().required(),
+          'score': Joi.number().required()
+        })
+        .then((res)=>{
+
+          let data = res.body;
+
+          expect(data.id).toEqual("1111-2222");
+          expect(data.name).toEqual("Breaking Bad");
+        })
+        .done(done);
+    afterAll((done)=> {
+      deleteFakeEpisode(done);
+    })
+  })
+})

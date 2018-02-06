@@ -9,13 +9,15 @@ import configure from './store';
 
 const store = configure();
 
-class Yolo extends Component {
+class ListEpisodes extends Component {
     render() {
-        return(<h1>Hello World  !!</h1>);
+        return(
+           <h1>YOLO Swag</h1>
+        );
     }
 };
 
-class Swag extends Component {
+class Episode extends Component {
     render() {
         return(<h1>YOLO Swag</h1>);
     }
@@ -27,10 +29,8 @@ export default class App extends Component {
             <Provider store={store}>
                 <Router>
                   <div>
-                    <Route path="/" component={Yolo}>
-                    </Route>
-                    <Route path="/new" component={Swag}>
-                    </Route>
+                    <Route path="/listEpisodes" component={ListEpisodes}></Route>
+                    <Route path="/episode" component={Episode}></Route>
                   </div>
                 </Router>
             </Provider>

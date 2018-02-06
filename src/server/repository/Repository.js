@@ -8,101 +8,117 @@ class Repository {
     constructor() {
 
     }
-
-    /*//GET all episode action
-    findAll() {
-        var episodes = [];
-        var listFiles = fs.readdirSync(config.data)
-        listFiles.forEach(function (file) {
-            var epi = JSON.parse(fs.appendFileSync(config.data+"/"+file,"utf-8"));
-            episodes.push(epi);
+    //READ FILE
+    readF(path){
+      return new Promise((resolve, reject) => {
+        //read file at path
+        fs.readFile(config.data+'/'+path, 'utf8', (error, data) => {
+          if(error){
+            reject(error);
+            return;
+          }
+           var dataFile = JSON.parse(data);
+          if(dataFile != "undefined") resolve(dataFile);
+          else reject(null);
         });
-        return episodes;
-    }*/
-    findAll(){
-        return new Promise((resolve,reject)=> {
-            const path = config.data
-            fs.readdir(path, function (err, datas)=> {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                var episodes = []
-                for(var i=0;i<datas.length(); i++){
-                    episodes.push(JSON.parse(data[i]));
-                }
-                resolve(episodes)
-            });
-        });
+      });
     }
 
-
-
-    /*//GET episode action
-    findBy(id) {
-        var epi = -1;
-        var listFiles = fs.readdirSync(config.data)
-        listFiles.forEach(function (file) {
-            var obj = JSON.parse(fs.appendFileSync(config.data+"/"+file,"utf-8"));
-            if(obj.id == id){
-                var epi = obj;
-            }
-        });
-        if(epi == -1){
-            response.status(404);
-        }
-    }
-    */
-    findBy(id){
-        return new Promise((resolve,reject)=>{
-            const path= config.data+"/"+id+".json";
-           fs.readFile(path,"utf-8",function (err,data){
-               if(err){
-                   reject(err);
+    //WRITE FILE
+    writeF(path, data) {
+        return new Promise((resolve, reject) => {
+          //write file at path
+           fs.writeFile(config.data +'/'+ path, JSON.stringify(data), (error) => {
+               if (error) {
+                   reject(error);
                    return;
                }
-               resolve(JSON.parse(data));
+               resolve(data);
            });
-
         });
     }
 
-    /*//POST episode action
-    add(object) {
-        var episode = object;
-        episode.id = episode.name.replace(/ /g, '') + episode.code;
-        fs.writeFileSync(config.data + '/' + episode.id + '.json', JSON.stringify(episode));
-        return episode;
-    }*/
-    add(episode){
-        return new Promise((resolve,reject)=>{
-           const path=config.data+"/"+episode.id+".json"
-            fs.writeFile(path,Json.stringify(episode),function(err,data){
-                if(err){
-                    reject(err);
-                    return;
-                }
-                resolve(episode);
-            })
+    //DELETE FILE
+    deleteF(path){
+      return new Promise((resolve, reject) => {
+        var filePath = config.data + '/' + path;
+        //check the existence of the file
+        fs.stat(filePath, (error, file) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          if(file) {
+            //suppression of the file
+            fs.unlink(path, (error) => {
+              if (error) reject(error);
+            });
+            resolve();
+          }
         });
+      });
+    }
+
+    //GET all episode action
+    findAll() {
+      return new Promise((resolve, reject) => {
+        fs.readdir(config.data, (error, listFiles) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          Promise.all(listFiles.map((file) => {
+            //call readFile function
+            return this.readF(file);
+          })).then((listEpisodes) => {
+            resolve(listEpisodes);
+          });
+        });
+      });
+    }
+
+    //GET episode action
+    findBy(id){
+      //call readFile function
+      return this.readF(`${id}.json`);
+    }
+
+    //POST episode action
+    add(object) {
+      return new Promise((resolve, reject) => {
+        //id creation
+        fs.writeFile(config.data+'/'+object.id+".json", JSON.stringify(object), function(err){
+          if(err){
+              reject(err);
+              return;
+          }
+          resolve(object);
+        });
+      });
     }
 
     //PUT action
-    edit(id, newValues) {
-
+    edit(id, newData) {
+      return new Promise((resolve, reject) => {
+        this.findBy(id).then((episode) => {
+          if (newData.note != "undefined") { episode.note = newData.note; }
+          episode.id = id;
+          this.writeF(`${episode.id}.json`, episode).then((episode) => {
+            resolve(episode);
+          }).catch((err) => {
+            reject(err);
+          });
+        }).catch((err) => {
+          reject(err);
+        });
+      });
     }
 
     //DELETE episode action
     delete(object){
-        var path = config.data + "/" + object.idEp + ".json";
-        if(fs.existsSync(path)){
-            fs.unlinkSync(path);
-            return res.sendStatus(204);
-        }else {
-            return res.sendStatus(404);
-        }
+      //call deleteFile function
+      return this.deleteF(`${id}.json`);
     }
-
 }
 
 var repository = new Repository();
