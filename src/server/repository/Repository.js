@@ -50,7 +50,7 @@ class Repository {
           }
           if(file) {
             //suppression of the file
-            fs.unlink(path, (error) => {
+            fs.unlink(filePath, (error) => {
               if (error) reject(error);
             });
             resolve();
@@ -102,6 +102,8 @@ class Repository {
       return new Promise((resolve, reject) => {
         this.findBy(id).then((episode) => {
           if (newData.note != "undefined") { episode.note = newData.note; }
+          if (newData.name != "undefined") { episode.name = newData.name; }
+          if (newData.code != "undefined") { episode.code = newData.code; }
           episode.id = id;
           this.writeF(`${episode.id}.json`, episode).then((episode) => {
             resolve(episode);
@@ -115,7 +117,7 @@ class Repository {
     }
 
     //DELETE episode action
-    delete(object){
+    delete(id){
       //call deleteFile function
       return this.deleteF(`${id}.json`);
     }

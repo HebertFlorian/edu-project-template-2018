@@ -3,15 +3,15 @@
     <title>Bootstrap Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../indexDesign.css">
+    <link rel="stylesheet" href="src/css/indexDesign.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap core CSS -->
-    <link href="../../src/css/bootstrap.min.css" rel="stylesheet">
+    <link href="src/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
-    <link href="../../src/css/mdb.min.css" rel="stylesheet">
+    <link href="src/css/mdb.min.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
-    <link href="../../src/css/style.css" rel="stylesheet">
+    <link href="src/css/style.css" rel="stylesheet">
   </head>
   <body>
     <nav class="menu mb-1 navbar navbar-expand-lg navbar-dark cyan">
@@ -34,6 +34,28 @@
           </ul>
         </div>
     </nav>
+    <!-- Material form login -->
+    <form>
+        <p class="h4 text-center mb-4">Sign in</p>
+
+        <!-- Material input email -->
+        <div class="md-form">
+            <i class="fa fa-envelope prefix grey-text"></i>
+            <input type="email" id="materialFormLoginEmailEx" class="form-control">
+            <label for="materialFormLoginEmailEx">Your email</label>
+        </div>
+
+        <!-- Material input password -->
+        <div class="md-form">
+            <i class="fa fa-lock prefix grey-text"></i>
+            <input type="password" id="materialFormLoginPasswordEx" class="form-control">
+            <label for="materialFormLoginPasswordEx">Your password</label>
+        </div>
+
+            <button class="btn btn-default" type="submit">Login</button>
+      
+    </form>
+    <!-- Material form login -->
 
     <div class="containerPage">
       <div class="item">
@@ -63,12 +85,12 @@
     </div>
 
     <!-- JQuery -->
-    <script type="text/javascript" src="../../src/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="src/js/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="../../src/js/popper.min.js"></script>
+    <script type="text/javascript" src="src/js/popper.min.js"></script>
     <!-- Bootstrap core JavaScript -->
-    <script type="text/javascript" src="../../src/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="src/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="../../src/js/mdb.min.js"></script>
+    <script type="text/javascript" src="src/js/mdb.min.js"></script>
   </body>
 </html>
