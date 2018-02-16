@@ -5,6 +5,9 @@ const repository = require('../repository/Repository.js')
 var router = express.Router();
 const uuid = require('node-uuid');
 
+var app = express();
+//app.use(express.static('/public'));
+
 /*
  Method : POST A episode
  Url : /api/episodes

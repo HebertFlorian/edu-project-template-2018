@@ -11,14 +11,14 @@ var server = {
         var that = this;
 
         this.process = child_process.spawn('node', ['src/server/index.js']);
-
+    
         this.process.stdout.addListener('data', function (data) {
             process.stdout.write(data);
         });
+
         this.process.stderr.addListener('data', function (data) {
             sys.print(data);
         });
-        
         this.process.addListener('exit', function (code) {
             console.log('Child process exited: ' + code);
             this.process = null;

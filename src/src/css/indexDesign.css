@@ -1,7 +1,8 @@
 body{
-  background: url("src/img/Wallpaper.jpg");
-  background-position: center;
+  background: url("../img/Wallpaper.jpg");
   background-repeat: no-repeat;
+  background-size: cover;
+  color : #000;
 }
 
 .menu{
@@ -17,7 +18,33 @@ body{
 
 }
 
+table{
+  margin-top : 20px;
+}
 
+td{
+  font-size: 1.5em;
+}
+
+input{
+  color: #fff;
+}
+
+.colorTable{
+  background: rgba(0,0,0,0.4);
+}
+
+.formDesign{
+  padding: 10px 20px;
+}
+
+label{
+  margin-right: 150px;
+}
+
+.table{
+  margin-bottom: 0px;
+}
 
 .item{
   /*background-color: #90caf9;*/ /* The image used */

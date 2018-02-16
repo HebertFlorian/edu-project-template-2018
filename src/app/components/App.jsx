@@ -7,7 +7,12 @@ import {
 import { Provider } from 'react-redux';
 import configure from './store';
 
+import DeleteItem from './AppComponents/DeleteItem';
+import EpisodeEdit from './AppComponents/EpisodeEdit';
+
 const store = configure();
+
+
 
 class ListEpisodes extends React.Component {
 
@@ -42,27 +47,32 @@ class ListEpisodes extends React.Component {
 
     render() {
         return(
-            <table>
-                <thead>
-                <tr>
-                    <td>Nom</td>
-                    <td>Code</td>
-                    <td>Note</td>
-                </tr>
-                </thead>
-                <tbody>
-                {this.state.episodes.map(episode =>
-                    <tr key={episode.id }>
-                        <td>{episode.name}</td>
-                        <td>{episode.code}</td>
-                        <td>{episode.note}</td>
-                        <td>
-                            <deleteItem episodeId={episode.id}/>
-                        </td>
-                    </tr>
-                )}
-                </tbody>
-            </table>
+          <table className="table table-hover">
+              <thead className="elegant-color">
+              <tr>
+                  <td>Nom</td>
+                  <td>Code</td>
+                  <td>Note</td>
+                  <td></td>
+                  <td></td>
+              </tr>
+              </thead>
+              <tbody className="colorTable">
+              {this.state.episodes.map(episode =>
+                  <tr class={episode.id}>
+                      <td>{episode.name}</td>
+                      <td>{episode.code}</td>
+                      <td>{episode.note}</td>
+                      <td>
+                        <DeleteItem idEpisode={episode.id}/>
+                      </td>
+                      <td>
+                        <Link className="btn btn-outline-warning waves-effect" to={`/menu/${episode.id}`}><i className="fa fa-edit mr-1"></i> EDIT</Link>
+                      </td>
+                  </tr>
+              )}
+              </tbody>
+          </table>
         );
     }
 };
@@ -129,26 +139,23 @@ class formulaire extends React.Component {
 
     render() {
         return(
-        <form onSubmit={this.handleSubmit}>
-            <label>
-                name:
-                <input type="text" value={this.state.name} onChange={this.handleChangeName} />
+        <form className="elegant-color formDesign" onSubmit={this.handleSubmit}>
+            <label>NAME
+              <input id="name" className="form-control" type="text" value={this.state.name} onChange={this.handleChangeName} />
             </label>
-            <label>
-                code:
-                <input type="text" value={this.state.code} onChange={this.handleChangeCode} />
+            <label>CODE
+              <input id="code" className="form-control" type="text" value={this.state.code} onChange={this.handleChangeCode} />
             </label>
-            <label>
-                note:
-                <input type="text" value={this.state.note} onChange={this.handleChangeNote}/>
+            <label>NOTE
+              <input id="note" className="form-control" type="text" value={this.state.note} onChange={this.handleChangeNote}/>
             </label>
-            <input type="submit" value="Submit" />
+            <button className="btn btn-outline-warning waves-effect" type="submit">ADD</button>
         </form>
         )
     }
 };
 
-class deleteItem extends React.Component {
+class deleteItemComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -173,12 +180,42 @@ class deleteItem extends React.Component {
 
     render(){
         return(
-            <button type="button" onClick={this.deleteAction}>
-                <span>X</span>
-            </button>
+          <button type="button" className="" onClick={() => this.deleteAction()}>
+              <span>X</span>
+          </button>
         );
     }
 }
+
+class Menu extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+
+    render(){
+        return(
+          <nav className="menu mb-1 navbar navbar-expand-lg navbar-dark cyan">
+
+          </nav>
+        );
+    }
+}
+
+class AppComponent extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return (
+        <div>
+          <EpisodesList/>
+        </div>
+        );
+    }
+};
 
 export default class App extends Component {
     render() {
@@ -186,9 +223,9 @@ export default class App extends Component {
             <Provider store={store}>
                 <Router>
                   <div>
-                        <Route path="/" component={ListEpisodes}></Route>
-                        <Route path="/" component={formulaire}></Route>
-
+                        <Route exact={true} path="/menu" component={formulaire}></Route>
+                        <Route exact={true} path="/menu" component={ListEpisodes}></Route>
+                        <Route exact={true} path="/menu/:id" component={EpisodeEdit} />
                   </div>
                 </Router>
             </Provider>
