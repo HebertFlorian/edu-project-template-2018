@@ -44,30 +44,34 @@ export default class EpisodeEditComponent extends Component {
             this.setState({ code: data.code });
             this.setState({ note: data.note });
         })
-
     }
 
     handleChangeName(event) {
-      this.setState({ name: event.target.value});
+        let state = this.state;
+        state.name = event.target.value;
+        this.setState(state);
     }
 
     handleChangeCode(event) {
-      this.setState({ code: event.target.value});
+        let state = this.state;
+        state.code = event.target.value;
+        this.setState(state);
     }
 
     handleChangeNote(event) {
-      this.setState({ note: event.target.value});
+        let state = this.state;
+        state.note = event.target.value;
+        this.setState(state);
     }
 
     handleSubmit(event) {
           var episode = {
-              id:    this.state.id,
               name:  this.state.name,
               code:  this.state.code,
               note:  this.state.note
           };
 
-          fetch('/api/episodes/' + episode.id, {
+          fetch('/api/episodes/' + this.state.id, {
               method: 'PUT',
               headers: {
                   'Accept': 'application/json',

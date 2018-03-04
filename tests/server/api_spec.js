@@ -130,4 +130,39 @@ describe('See one episode', () => {
       deleteFakeEpisode(done);
     })
   })
-})
+});
+
+
+///Methode Put
+describe('Modifi an episode', () => {
+  beforeAll((done) => {
+    createFakeEpisode(done);
+  });
+  it('should make an http request', (done) => {
+    frisby.put(`${URL}/1111-2222`,{
+      name: "Blindspot",
+      code: "S03E02",
+      score: 5
+    })
+        .expect('status', 200)
+        .expect('jsonTypes',{
+          'id': Joi.string().required(),
+          'name': Joi.string().required(),
+          'code': Joi.string().required(),
+          'score': Joi.number().required()
+        })
+        .then((res)=>{
+
+          let data = res.body;
+
+          expect(data.id).toEqual("1111-2222");
+          expect(data.name).toEqual("Blindspot");
+          expect(data.code).toEqual("S03E02");
+          expect(data.score).toEqual(5);
+        })
+        .done(done);
+    afterAll((done)=> {
+      deleteFakeEpisode(done);
+    })
+  })
+});

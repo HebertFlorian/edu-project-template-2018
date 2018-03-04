@@ -7,7 +7,7 @@ import {
 import { Provider } from 'react-redux';
 import configure from './store';
 
-import DeleteItemCpt from './AppComponents/DeleteItemCpt';
+import DeleteItem from './AppComponents/DeleteItem';
 import EpisodeEdit from './AppComponents/EpisodeEdit';
 
 const store = configure();
@@ -64,10 +64,10 @@ class ListEpisodes extends React.Component {
                       <td>{episode.code}</td>
                       <td>{episode.note}</td>
                       <td>
-                        <DeleteItemCpt idEpisode={episode.id}/>
+                        <DeleteItem idEpisode={episode.id}/>
                       </td>
                       <td>
-                        <Link className="btn btn-outline-warning waves-effect" to={`/menu/${episode.id}`}><i className="fa fa-edit mr-1"></i> EDIT</Link>      
+                        <Link className="btn btn-outline-warning waves-effect" to={`/menu/${episode.id}`}><i className="fa fa-edit mr-1"></i> EDIT</Link>
                       </td>
                   </tr>
               )}

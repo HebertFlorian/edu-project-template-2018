@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 /* List Component */
 /* ------------------------------------------------ */
 
-export default class DeleteItemCpt extends Component {
+export default class DeleteItem extends Component {
 
     constructor(props) { super(props); }
 
